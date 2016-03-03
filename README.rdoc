@@ -1,0 +1,31 @@
+== README
+
+This README would normally document whatever steps are necessary to get the
+application up and running.
+
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
+
+# https://www.reddit.com/r/news.json
+# JSON.parse(j)['data']['children'].length
+# Sure does suck that Google Reader shut down. Please pick your favorite news website (NYTimes, Hacker News, Reddit, BBC, etc.) and build an RSS reader for that site. It has to have two functions. i) shows the headlines. ii) allows me to save an article (favorite / star / or something like that). Please push the results to GitHub and deploy it somewhere (Heroku, Digital Ocean, etc.). I've noticed that candidates that have used Sinatra to build this have had particular luck, but you're welcome to use whatever framework you like.
+
+Please feel free to use a different markup language if you do not plan to run
+<tt>rake doc:app</tt>.
