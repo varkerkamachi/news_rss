@@ -1,0 +1,10 @@
+<h1>Reddit News Feed</h1>
+<p class="info">Select favorites with a star</p>
+
+<%- if @data.present? %>
+  <ul>
+    <%- @data.each do |record| %>
+      <li><%= generate_story_title_and_link record -%></li>
+    <%- end %>
+  </ul>
+<%- end %>

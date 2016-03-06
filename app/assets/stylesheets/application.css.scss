@@ -1,0 +1,138 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+@import url(https://fonts.googleapis.com/css?family=Noto+Serif|Hind:500);
+
+$body-width: 75%;
+$star-size: 22px;
+$dbl-star-size: 44px;
+
+
+html,body {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  font: normal 15px/19px 'Hind', 'Arial', sans-serif;
+}
+
+.clearfix:after {
+  display: block;
+  height: 0;
+  content: '';
+  zoom: 1;
+  clear: both;
+}
+
+.left {
+  float: left;
+}
+
+ul,
+ul li {
+  padding:0;
+  margin: 0;
+  list-style: none outside none;
+}
+
+a,
+a:visited,
+a:hover {
+  text-decoration: none;
+  color: #4c4d4f;
+  opacity: 0.8;
+}
+a:visited {
+  color: purple;
+}
+a:hover {
+  color: black;
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.info {
+  font-size: 12px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-shadow: 0 1px 0 #ffffff;
+}
+.wrapper {
+  margin: 0 auto;
+  padding: 10px 20px;
+  width: $body-width;
+  background-color: #f4faff;
+  box-shadow: 0 0 4px 0 #c8dddf;
+
+  li {
+    position: relative;
+    line-height: 220%;
+    margin: 2px 0;
+    padding: 8px 15px 8px 5px;
+    transition: background-color linear 0.15s;
+    font-family: 'Noto Serif', serif;
+    &:hover {
+      background: rgba(255,255,255, 0.7);
+    }
+
+    .star {
+      text-indent: -9999em;
+      background: image-url('stars.png') -$star-size center no-repeat;
+      background-size: $dbl-star-size $star-size;
+      display: block;
+      width: $star-size;
+      height: $star-size;
+      margin: auto 5px auto 0;
+      opacity: 0.8;
+
+      &:hover {
+        cursor: pointer;
+        opacity: 1;
+        background-position: left center;
+      }
+      &.favorite {
+        background-position: left center;
+        &:hover {
+          background-position: -$star-size center;
+        }
+      }
+    }
+  }
+}
+
+.date_time_source {
+  @extend .info;
+  width: 165px;
+  line-height: 110%;
+  margin-right: 15px;
+  .source {
+    color: #3456e8;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

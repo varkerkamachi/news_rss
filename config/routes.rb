@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+
+  resources :favorite_stories
+
+  resources :stories, only: [:index, :update]
+  get '/stories/:story_id/favorites/set/:favorite', to: 'stories#update'
+
+  root 'stories#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
