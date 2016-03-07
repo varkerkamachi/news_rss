@@ -15,19 +15,64 @@
 //= require turbolinks
 //= require_tree .
 
-var refresh=false,
-  interval = 30000,
-  refreshCount = 0,
-  refreshLimit = 20;
+// after 20 cycles we want the auto-refresh to be disabled so we don't hammer reddit too long
+var refreshLimit = 10;
 
+
+// event handlers for stars and config radio buttons
 $(document).on('click', '.star', function() {
   toggleFavorite.call($(this));
 })
 .on('mousedown', 'input[type="radio"]', function() {
-  console.log('va', $(this)[0].value);
   setRefresh($(this)[0].value);
 });
 
+//set config options from local storage...
+function init() {
+  if(localStorage.getItem("refresh") == undefined){
+    localStorage.setItem("refresh", 'false');
+  }
+  if(localStorage.getItem("interval") == undefined){
+    localStorage.setItem("interval", 0);
+  }
+  if(parseInt(localStorage.getItem("refreshCount")) == NaN){
+    localStorage.setItem("refreshCount", 0);
+  }
+  this.refresh = localStorage.getItem("refresh");
+  this.interval = localStorage.getItem("interval");
+  this.refreshCount = localStorage.getItem("refreshCount");
+
+  getRefreshIntervalState();
+  setRefreshOption();
+  refreshCycle();
+}
+
+function getRefreshIntervalState() {
+  if(this.refresh == 'true') {
+    $('#refresh_interval').attr('disabled', false);
+    $('#refresh_enabled_false').attr('checked', false);
+    $('#refresh_enabled_true').attr('checked', 'true');
+  }
+  else {
+    $('#refresh_interval').attr('disabled', 'disabled');
+    $('#refresh_enabled_true').attr('checked', false);
+    $('#refresh_enabled_false').attr('checked', 'true');
+  }
+};
+
+// selected option for refresh option menu
+function setRefreshOption(val) {
+  if(val == 0) {
+    $('#refresh_interval option[value=0]').prop('selected', true);
+  }
+  else {
+    if(this.interval != 'undefined') {
+      $('#refresh_interval option[value='+ localStorage.getItem("interval") + ']').prop('selected', true);
+    }
+  }
+}
+
+// css change and ajax handler call to favorite a story
 var toggleFavorite = function() {
   if($(this).hasClass('favorite')) {
     favoriteThisStory(0, $(this).parent().attr('id'));
@@ -38,6 +83,7 @@ var toggleFavorite = function() {
   $(this).toggleClass('favorite');
 };
 
+// actual favorite story api call....
 var favoriteThisStory = function(bool, elmId) {
   //create favorite for this story
   var favorite = bool == 1 ? true : false;
@@ -46,44 +92,67 @@ var favoriteThisStory = function(bool, elmId) {
     '/stories/'+elmId+'/favorites/set/'+bool
   )
   .success(function(responseData) {
-    console.log('responseData', responseData);
     renderHtmlForItem(elmId, responseData);
   });
 
 };
 
+// dynamicaally set css for stars
 var renderHtmlForItem = function(id, data) {
   var style = data['favorite'] == true ? 'star favorite left' : 'star left';
-  console.log('style', style);
   $('#'+id+' .star').css(style);
 };
 
 var setInterval = function(data) {
-  interval = data;
-  refreshCycle();
+  localStorage.setItem("interval", data);
+  this.interval = localStorage.getItem("interval");
+  refreshCycle.call();
 };
 
 var setRefresh = function(data) {
-  refresh = data;
-  if(refresh == 'true') {
-    $('#refresh_interval').attr('disabled', false);
+  localStorage.setItem("refresh", data);
+  this.refresh = localStorage.getItem("refresh");
+  // disable option menu
+  if(data == 'false') {
+    setRefreshOption(0);
   }
-  else {
-    $('#refresh_interval').attr('disabled', 'disabled');
-  }
+  getRefreshIntervalState();
 };
 
+// manage refresh of page ...
 var refreshCycle = function(){
-  console.log('starting  refresh.............', refresh, refreshCount, refreshLimit);
-  if( refresh == true && (refreshCount < refreshLimit) ) {
-    setTimeout(function(){
-      window.location.reload();
-    }, interval);
+  if( this.refresh == 'true' && this.interval > 0) {
+    // increment counter ...
+    incrementRefreshCount();
+    if(parseInt(this.refreshCount) < parseInt(this.refreshLimit)) {//
+      return setTimeout(
+        function(){
+          // requery for new stories & trigger refreshCycle call again
+          window.location.reload();
+        }, this.interval);
+    }
+    else {
+      return resetRefresh();
+    }
   }
   else {
-    setRefresh(false);
-    refreshCount = 0;
-
-    return;
+    return resetRefresh();
   }
-};
+}
+
+var resetRefresh = function() {
+  setRefresh('false');
+  this.refreshCount = 0;
+  localStorage.setItem('refreshCount', this.refreshCount);
+}
+
+var incrementRefreshCount = function() {
+  this.refreshCount = parseInt(this.refreshCount) + 1;
+  localStorage.setItem('refreshCount', this.refreshCount);
+}
+
+$(document).ready(function() {
+  init();
+});
+
+

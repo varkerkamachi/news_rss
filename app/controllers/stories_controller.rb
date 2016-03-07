@@ -13,11 +13,9 @@ end
 
   def update
     @fs = Story.find_or_create_by(id: params[:story_id])
-    puts "FS: #{@fs.inspect} ==========================="
     @fs.favorite = params[:favorite].to_i == 1 ? true : false
     @fs.save!
 
-    puts "FS: #{@fs.inspect} ==========================="
     respond_with @fs
   end
 end
