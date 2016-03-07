@@ -8,8 +8,8 @@ default: &default
   adapter: postgresql
   pool: 5
   timeout: 5000
-  user:
-  password:
+  user: rss_user
+  password: 4ss4ss147852
 
 development:
   <<: *default
